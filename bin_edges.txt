@@ -1,0 +1,232 @@
+<prelim_jetpt_13bins>
+    0 1 2 3 4 5 6 8 10 15 20 25 36 50.
+</prelim_jetpt_13bins>
+
+<BBCES_3bin> // old values from using BBCES adjusted
+    2750. 8292. 24159. 57433
+</BBCES_3bin>
+
+<BBCES_4bin> // old values from using BBCES adjusted
+    0. 2750. 8292. 24159. 57433
+</BBCES_4bin>
+
+<BBCES_10bin>
+    0. 2750.05 5369.02 8292.26 11557.1 15223.4 19377.9 24158.5 29893.7 37487.6 57432.7
+</BBCES_10bin>
+
+<comment> These are deciles of transverse to corrected tower trigger </comment>
+<EAtrans_10bin>  // BAD DON'T USE!
+ 0.0      0.41328  0.62286  0.80471 0.9811 1.16467  1.36455  1.59887  1.90578 2.3796  15.
+</EAtrans_10bin>
+
+<EAtrans_3bin> // BAD DON'T USE! (It appears the values are off by a factor of 2!
+ 0.  0.804711 1.59887 15.
+</EAtrans_3bin>
+
+<EAbbc_3bin>  // from MB events
+0
+8332.79
+24222.7
+69825
+</EAbbc_3bin>
+
+<zdcX_mu_sigma_206> // 500206 events 
+ 15674.3602  5010.6290  10663.7312 20684.9892 // (0)mu (1)sig (2)mu-sig (3)mu+sig
+  0.2009   0.1765   0.0000  35000.0000 // (4)rat_lo  (5)rat_hi (6)range_lo (7)range_hi
+</zdcX_mu_sigma_206>
+
+<vz_mu_sigma_206>  // 500206 events 
+  0.2772   5.7322  -5.4550  6.0094  // (0)mu (1)sig (2)mu-sig (3)mu+sig
+  0.2317   0.2105  -21.0000  21.0000 // (4)rat_lo  (5)rat_hi (6)range_lo (7)range_hi
+</vz_mu_sigma_206>
+
+<EAbbc_10bin> // some comment
+0 2767.03 5397.9 8332.79 11610.1 15280.1  
+19439.7 24222.7 29959.4 37535.7 69825
+</EAbbc_10bin>
+
+<EAtpc_3bin>  // from MB events
+0 0.504763 0.959431 10
+</EAtpc_3bin>
+
+<EAtpc_10bin>
+0 0.291729 0.404587 0.504763 0.603913 0.708137
+  0.823597 0.959431 1.13484  1.40383  10
+</EAtpc_10bin>
+
+<EAtpc_10bin_short>
+0 0.291729 0.404587 0.504763 0.603913 0.708137
+  0.823597 0.959431 1.13484  1.40383  1.99
+</EAtpc_10bin_short>
+
+
+<crazy_T>
+    5 
+    <crazy_M>
+    10 15 20 25 30 35 40 
+    </crazy_M>
+    45 50 
+</crazy_T>
+
+<jetpt_5_T>
+         5
+   <jetpt_5_M> 
+         10. 15. 20. 25. 30. 35. 
+   </jetpt_5_M> 
+   40 45 50 55
+</jetpt_5_T>
+
+<jetpt_a_T>
+         7. 8. 9.
+   <jetpt_a_M> 
+         10. 15. 20. 25. 35. 
+   </jetpt_a_M> 
+   40. 45 55
+</jetpt_a_T>
+
+
+<jetpt_prelim_T>
+   3  4  5  6  7.
+   <jetpt_prelim_M> 
+       10. 15. 20. 25. 30. 35.
+   </jetpt_prelim_M> 
+   40 45 50
+</jetpt_prelim_T>
+
+<jetpt_byones_T>
+       6 7 8 9 
+   <jetpt_byones_M>
+       10 11 12 13 14 15 16 17 
+       18 19 20 21 22 23 24 25 26 27 28 29 30
+       31 32 33 34 35 36
+   </jetpt_byones_M>
+   37 38 39 40 41 42 43 44 45 46 47 48 49 50
+</jetpt_byones_T>
+
+<jetpt_70byones>
+<jetpt_bigbyones>
+0 0 70 70
+</jetpt_bigbyones>
+</jetpt_70byones>
+
+<jetpt_bigbyfives>
+0 0 14 70
+</jetpt_bigbyfives>
+<jetpt_bigbytwos>
+0 0 35 70
+</jetpt_bigbytwos>
+
+
+<pt_by1Raghav_T>
+   7 8 9
+   <pt_by1Raghav_M>
+       10 11 12 13 14 15 16 17 18 19 
+       20 21 22 23 24 25 26 27 28 29 
+   </pt_by1Raghav_M>
+   30 31 32 33 34 35 36 37 38 39
+   40 41 42 43 44 45 46 47 48 49
+   50 51 52 53 54 55 56 57 58 59
+</pt_by1Raghav_T>
+
+<prelim_Raghav_M>
+   7. 8. 9.
+   <prelim_Raghav_T> 
+   10. 15. 20. 25. 36. 
+   </prelim_Raghav_T> 
+   50.
+</prelim_Raghav_M>
+
+<01_T>
+    5 5 9 9.5
+    <01_M>
+    10 10 19 29
+    </01_M>
+    30 30 20 50
+</01_T>
+
+<jetpt_byones_M>
+   0. 1. 2. 3. 4. 
+   <jetpt_byones_T>
+       5 6 7 8 9 10 11 12 13 14 15 16 17 
+       18 19 20 21 22 23 24 25 26 27 28 29 30
+       31 32 33 34 35 36 37 38 39 40
+   </jetpt_byones_T>
+   41 42 43 44 45 46 47 48 49 50
+   51 52 53 54 55 56 57 58 59 60
+</jetpt_byones_M>
+
+<embedding_pthat>
+    5. 7. 9. 11. 15. 25. 35. 45. 55. 65.
+</embedding_pthat>
+
+<BBCES_prelim> # four bins are used
+    0.  2750. 8292. 24159. 57433.
+</BBCES_prelim>
+
+<piKp_emb_pt>
+  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9  1.0  1.1
+  1.2  1.3  1.4  1.5  1.6  1.7  1.8  1.9  2.0  2.1
+  2.2  2.3  2.4  2.5  2.6  2.7  2.8  2.9  3.0  3.1
+  3.2  3.3  3.4  3.5  3.7  3.9  4.1  4.3  4.5  4.7
+  4.9  5.1  5.3  5.5  5.7  5.9  6.2  6.5  6.8  7.1
+  7.4  7.7  8.1  8.5  8.9  9.4  9.9 10.5 11.1 11.8
+ 12.5 13.3 14.2 15.2 16.4 17.8 19.4 21.3 23.6 26.5
+ 30.0
+</piKp_emb_pt>
+
+<jetpt_prelim>
+0 1 2 3 4 5 6 8 10 15 20 25 36 
+</jetpt_prelim>
+
+<trackpt_resolution> 
+   0.0   0.1   0.2   0.3   0.4
+   0.5   0.6   0.7   0.8   0.9
+   1.0   1.1   1.2   1.3   1.4
+   1.5   1.6   1.7   1.8   1.9
+   2.0   2.1   2.2   2.3   2.4
+   2.5   2.6   2.7   2.8   2.9
+   3.0   3.1   3.2   3.3   3.4
+   3.5   3.7   3.9   4.1   4.3
+   4.5   4.7   4.9   5.1   5.3
+   5.5   5.7   6.0   6.3   6.6
+   6.9   7.2   7.5   7.9   8.3
+   8.7   9.1   9.6  10.1  10.7
+  11.3  12.0  12.7  13.5  14.4
+  15.4  16.6  18.0  19.6  21.5
+  23.8  30.0
+</trackpt_resolution>
+
+<trackpt_res_fit_pi>        0.00927232  0.01492968  0.00254956  </trackpt_res_fit_pi>      
+<trackpt_res_fit_antipi>    0.01258484  0.01259294  0.00263118  </trackpt_res_fit_antipi>  
+<trackpt_res_fit_K>         0.00511254  0.01631751  0.00290955  </trackpt_res_fit_K>       
+<trackpt_res_fit_antiK>     0.00973224  0.01243372  0.00308442  </trackpt_res_fit_antiK>   
+<trackpt_res_fit_p>         0.02709160  0.00456935  0.00377217  </trackpt_res_fit_p>       
+<trackpt_res_fit_pbar>      0.02549189  0.00752014  0.00347407  </trackpt_res_fit_pbar>    
+
+<trackpt_mu+3sig_pi>        0.02842693  1.04378776  0.00800612  </trackpt_mu+3sig_pi>      
+<trackpt_mu+3sig_antipi>    0.03886298  1.03700014  0.00794661  </trackpt_mu+3sig_antipi>  
+<trackpt_mu+3sig_K>         0.01494731  1.04878264  0.00899664  </trackpt_mu+3sig_K>       
+<trackpt_mu+3sig_antiK>     0.02888656  1.03727380  0.00926847  </trackpt_mu+3sig_antiK>   
+<trackpt_mu+3sig_p>         0.07176077  1.01804080  0.01127001  </trackpt_mu+3sig_p>       
+<trackpt_mu+3sig_pbar>      0.06681327  1.02748682  0.01004769  </trackpt_mu+3sig_pbar>    
+
+<trackpt_mu+3sig_iter_pi>        0.02454268  1.04816396  0.00945054  </trackpt_mu+3sig_iter_pi>      
+<trackpt_mu+3sig_iter_antipi>    0.03260966  1.04271422  0.00927156  </trackpt_mu+3sig_iter_antipi>  
+<trackpt_mu+3sig_iter_K>         0.01171361  1.05203518  0.01049305  </trackpt_mu+3sig_iter_K>       
+<trackpt_mu+3sig_iter_antiK>     0.02266972  1.04321310  0.01071239  </trackpt_mu+3sig_iter_antiK>   
+<trackpt_mu+3sig_iter_p>         0.06317751  1.02340004  0.01256068  </trackpt_mu+3sig_iter_p>       
+<trackpt_mu+3sig_iter_pbar>      0.05595688  1.03488338  0.01122253  </trackpt_mu+3sig_iter_pbar>    
+
+<trackpt_mu+4sig_pi>             0.03769925  1.05871743  0.01055568  </trackpt_mu+4sig_pi>           
+<trackpt_mu+4sig_antipi>         0.05144782  1.04959309  0.01057779  </trackpt_mu+4sig_antipi>       
+<trackpt_mu+4sig_K>              0.02005985  1.06510015  0.01190619  </trackpt_mu+4sig_K>            
+<trackpt_mu+4sig_antiK>          0.03861880  1.04970752  0.01235289  </trackpt_mu+4sig_antiK>        
+<trackpt_mu+4sig_p>              0.09885237  1.02261015  0.01504218  </trackpt_mu+4sig_p>            
+<trackpt_mu+4sig_pbar>           0.09230515  1.03500696  0.01352176  </trackpt_mu+4sig_pbar>         
+
+<trackpt_mu+5sig_pi>             0.04697158  1.07364711  0.01310524  </trackpt_mu+5sig_pi>           
+<trackpt_mu+5sig_antipi>         0.06403266  1.06218603  0.01320898  </trackpt_mu+5sig_antipi>       
+<trackpt_mu+5sig_K>              0.02517239  1.08141766  0.01481574  </trackpt_mu+5sig_K>            
+<trackpt_mu+5sig_antiK>          0.04835103  1.06214124  0.01543732  </trackpt_mu+5sig_antiK>        
+<trackpt_mu+5sig_p>              0.12594397  1.02717951  0.01881435  </trackpt_mu+5sig_p>            
+<trackpt_mu+5sig_pbar>           0.11779704  1.04252710  0.01699582  </trackpt_mu+5sig_pbar>         

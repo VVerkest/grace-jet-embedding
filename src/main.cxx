@@ -16,10 +16,10 @@ int main(int nargs, char** argv) {
      *   5: optional input
      */
 
-    int n_events          {  (nargs>1) ? atoi(argv[1]) : 100 };
+    int n_events          {  (nargs>1) ? atoi(argv[1]) : 10000 };
     string inp_list       {  (nargs>2) ? argv[2] : "in-lists/list_test.list" };
-    string which_loop     {  (nargs>3) ? argv[3] : "sys_err" };
-    string o_name_tag     {  (nargs>4) ? argv[4] : "sys_err" };
+    string which_loop     {  (nargs>3) ? argv[3] : "jetEmbedding_loop" };
+    string o_name_tag     {  (nargs>4) ? argv[4] : "jetEmbedding_loop" };
 
     ostringstream collect;
     for (int i{5};i<nargs;++i) {
@@ -47,8 +47,8 @@ int main(int nargs, char** argv) {
         sys_err(my_events, collect.str());
    } else if (which_loop == "eta_match") {
         eta_match(my_events, collect.str());
-   } else if (which_loop == "thesis_emb") {
-        thesis_emb(my_events, collect.str());
+   } else if (which_loop == "jetEmbedding_loop") {
+        jetEmbedding_loop(my_events, collect.str());
    } else if (which_loop == "five_rooResF") {
         five_rooResF(my_events, collect.str());
    } else if (which_loop == "jet_draw") {

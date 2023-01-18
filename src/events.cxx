@@ -79,19 +79,19 @@ void events::Init(TTree *tree)
                          // couldn't be read from the tree
     mu_event        = nullptr;
     // List of branches
-    fChain->SetBranchAddress("mc_Cjet_njets", &mc_Cjet_njets, &b_mc_Cjet_njets);
+    //fChain->SetBranchAddress("mc_Cjet_njets", &mc_Cjet_njets, &b_mc_Cjet_njets);
     fChain->SetBranchAddress("mc_Cjet", &tca_mc_Cjet);
     fChain->SetBranchAddress("mc_Cjet_rho", &mc_Cjet_rho, &b_mc_Cjet_rho);
     fChain->SetBranchAddress("mc_Cjet_rho_sigma", &mc_Cjet_rho_sigma, &b_mc_Cjet_rho_sigma);
-    fChain->SetBranchAddress("mc_Fjet_njets", &mc_Fjet_njets, &b_mc_Fjet_njets);
+    //fChain->SetBranchAddress("mc_Fjet_njets", &mc_Fjet_njets, &b_mc_Fjet_njets);
     fChain->SetBranchAddress("mc_Fjet", &tca_mc_Fjet);
     fChain->SetBranchAddress("mc_Fjet_rho", &mc_Fjet_rho, &b_mc_Fjet_rho);
     fChain->SetBranchAddress("mc_Fjet_rho_sigma", &mc_Fjet_rho_sigma, &b_mc_Fjet_rho_sigma);
-    fChain->SetBranchAddress("Cjet_njets", &Cjet_njets, &b_Cjet_njets);
+    //fChain->SetBranchAddress("Cjet_njets", &Cjet_njets, &b_Cjet_njets);
     fChain->SetBranchAddress("Cjet", &tca_Cjet);
     fChain->SetBranchAddress("Cjet_rho", &Cjet_rho, &b_Cjet_rho);
     fChain->SetBranchAddress("Cjet_rho_sigma", &Cjet_rho_sigma, &b_Cjet_rho_sigma);
-    fChain->SetBranchAddress("Fjet_njets", &Fjet_njets, &b_Fjet_njets);
+    //fChain->SetBranchAddress("Fjet_njets", &Fjet_njets, &b_Fjet_njets);
     fChain->SetBranchAddress("Fjet", &tca_Fjet);
     fChain->SetBranchAddress("Fjet_rho", &Fjet_rho, &b_Fjet_rho);
     fChain->SetBranchAddress("Fjet_rho_sigma", &Fjet_rho_sigma, &b_Fjet_rho_sigma);
@@ -101,12 +101,12 @@ void events::Init(TTree *tree)
     fChain->SetBranchAddress("mcNeut", &tca_mcNeut);
     fChain->SetBranchAddress("track", &tca_track);
     fChain->SetBranchAddress("tower", &tca_tower);
-    fChain->SetBranchAddress("EastBBC", EastBBC, &b_s);
-    fChain->SetBranchAddress("WestBBC", WestBBC, &b_s_0);
-    fChain->SetBranchAddress("ZdcSmdEastHorizontal", ZdcSmdEastHorizontal, &b_s_1);
-    fChain->SetBranchAddress("ZdcSmdEastVertical", ZdcSmdEastVertical, &b_s_2);
-    fChain->SetBranchAddress("ZdcSmdWestHorizontal", ZdcSmdWestHorizontal, &b_s_3);
-    fChain->SetBranchAddress("ZdcSmdWestVertical", ZdcSmdWestVertical, &b_s_4);
+    //fChain->SetBranchAddress("EastBBC", EastBBC, &b_s);
+    //fChain->SetBranchAddress("WestBBC", WestBBC, &b_s_0);
+    //fChain->SetBranchAddress("ZdcSmdEastHorizontal", ZdcSmdEastHorizontal, &b_s_1);
+    //fChain->SetBranchAddress("ZdcSmdEastVertical", ZdcSmdEastVertical, &b_s_2);
+    //fChain->SetBranchAddress("ZdcSmdWestHorizontal", ZdcSmdWestHorizontal, &b_s_3);
+    //fChain->SetBranchAddress("ZdcSmdWestVertical", ZdcSmdWestVertical, &b_s_4);
 
    //:TAG END: Set Branches
    Notify();

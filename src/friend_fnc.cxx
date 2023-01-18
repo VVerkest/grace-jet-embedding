@@ -133,7 +133,7 @@ Iter_GoodTracks::Iter_GoodTracks
 void Iter_GoodTracks::skip_bad_tracks() {
     while ( 
           index != n_tracks 
-       && (!ptr->pass_cuts || (0.52*ptr->nHitsPoss > ptr->nHitsFit))
+       && (!ptr->pass_cuts || (0.52*ptr->nHitsPoss > ptr->nHitsFit) || ptr->dcaXYZ>=3.)
     ){
         ptr=(mupicoTrack*)tca->UncheckedAt(++index);
     }

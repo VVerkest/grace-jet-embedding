@@ -237,6 +237,7 @@ public :
    friend void rooResF_check(events&, string);
    friend void rooResF(events&, string);
    friend void test_loop(events&, string);
+   friend void jetEmbedding_loop(events&, string);
 
 };
 #endif

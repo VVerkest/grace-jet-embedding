@@ -6,8 +6,8 @@
 
 
 
-AN_setter=${HOME}/AN_common/AN-common-config
-io_setter=${HOME}/root_macros/io_lib/iolib-config
+AN_setter=/tier2/home/groups/rhi/STAR/software/pico_Grace/AN_common/AN-common-config
+io_setter=/tier2/home/groups/rhi/STAR/software/pico_Grace/io_lib/iolib-config
 ccflg=`${FASTJET3}/fastjet-config --cxxflags` `root-config --cflags` `${io_setter} -I` `${AN_setter} -I`  -I${ROOUNFOLD}/src
 ldflg=`${FASTJET3}/fastjet-config --libs` `root-config --glibs` `${io_setter} -L` `${AN_setter} -L`  -L${ROOUNFOLD} -lRooUnfold
 
@@ -39,8 +39,8 @@ bin/main: obj/events.o \
           obj/bins70.o \
           obj/jet_draw.o \
           obj/five_rooResF.o \
-          obj/thesis_emb.o \
           obj/eta_match.o \
+          obj/jetEmbedding_loop.o \
           obj/sys_err.o
 	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
 
@@ -98,10 +98,10 @@ obj/jet_draw.o: src/jet_draw.cxx src/events.h
 obj/five_rooResF.o: src/five_rooResF.cxx src/events.h
 	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-obj/thesis_emb.o: src/thesis_emb.cxx src/events.h
+obj/eta_match.o: src/eta_match.cxx src/events.h
 	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-obj/eta_match.o: src/eta_match.cxx src/events.h
+obj/jetEmbedding_loop.o: src/jetEmbedding_loop.cxx src/events.h
 	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
 obj/sys_err.o: src/sys_err.cxx src/events.h

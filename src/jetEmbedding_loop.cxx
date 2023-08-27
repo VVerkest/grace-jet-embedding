@@ -14,6 +14,30 @@
 
 #include "ioClass.h"
 
+const double bin_leadPt[51] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
+const double bin_iBBCEsum[11] = { 0.,  2802.38, 5460.32, 8420.66, 11722, 15410.1, 19584.9, 24371, 30105.3, 37666.3, 64000};
+const double bin_ZDCx[6] = {5000., 8000., 11000., 14000., 17000., 20000.};
+const double ZDCxWeight[5] = {1, 1.7291, 2.0717, 2.64997, 3.8812};
+
+double calc_absDphi(double a, double b) {
+    double val = abs(a - b);
+    while (val > M_PI) val = abs(val - 2*M_PI);
+    return val;
+};
+
+bool trigger_matches_jet(double trig_eta, double trig_phi, double lead_eta, double lead_phi) {
+    const auto dphi = calc_absDphi(lead_phi,trig_phi);
+    const auto deta = lead_eta-trig_eta;
+    return  (dphi>(M_PI-0.4)) || ((dphi*dphi+deta*deta)<0.16);
+};
+
+int get_zdcX_bin(double zdcx) {
+    if (zdcx>20000. || zdcx<5000.) { cout<<"zdcx must be between 5k and 20k"<<endl; }
+    for (int i=0; i<5; ++i) {
+        if ( zdcx>=bin_ZDCx[i] && zdcx<=bin_ZDCx[i+1] ) { return i; }
+    }
+    return 9999;
+};
 
 bool is_phi_p4match(double phi_A, double phi_B) {
     double delta = TMath::Abs(phi_A - phi_B);
@@ -56,8 +80,6 @@ void jetEmbedding_loop(events& dat, string _options) {
         ++n_options;
     }
 
-    const double bin_leadPt[51] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
-    const double bin_iBBCEsum[11] = { 0., 2767.15, 5397.98, 8333.35, 11610.5, 15280.9, 19440.2, 24219.7, 29959, 37534.5, 64000. }; //{0., 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000.};
 
     // list of good events and bad towers
     ioIntMap  runid     { "in-data/good_run.list" , 1, 0 ,false };
@@ -81,6 +103,8 @@ void jetEmbedding_loop(events& dat, string _options) {
         if (fabs(dat.mu_event->vz)>vzCut) { continue; } // cut on vz
         if (fabs(dat.mu_event->vz - dat.mu_event->vzVpd)>VertexZDiffCut) { continue; } // cut on vz diff
 
+        if (dat.mu_event->ZDCx<5000. || dat.mu_event->ZDCx>20000.)  continue; // cut on ZDCx
+
 //        for (auto track : Iter_GoodTracks(dat.tca_track)) {        }
 //        for (auto track : dat.iter_mcTr){        }
 //        for (auto part : dat.iter_mcNeut){            }
@@ -95,6 +119,8 @@ void jetEmbedding_loop(events& dat, string _options) {
         if ( trigEt<4. ){ continue; } // take the highest energy offline trigger tower >4GeV
         if (dat.tca_Fjet->GetEntriesFast()==0 && dat.tca_mc_Fjet->GetEntriesFast()==0) { continue; }
         
+        int zdcxbin = get_zdcX_bin(dat.mu_event->ZDCx);
+
         double leadPt = 0., leadEta, leadPhi;
         for (auto jet : dat.iter_Fjet){
             if (jet.pt > leadPt && jet.pt > 4.) { // take highest-pT jet
@@ -114,11 +140,12 @@ void jetEmbedding_loop(events& dat, string _options) {
                 }
             }
             if ( mc_leadPt<4. ) { continue; }
-            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt); // if part jet and no det jet: fill missed
+            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]); // if part jet and no det jet: fill missed
             continue;
         }
 //        cout<<trigPhi<<" \t "<<leadPhi<<endl;
-        if( !is_phi_p4match( trigPhi, leadPhi) ) { continue; }  // require trigger in det-level leading jet (or recoil region)
+//        if( !is_phi_p4match( trigPhi, leadPhi) ) { continue; }  // require trigger in det-level leading jet (or recoil region)
+        if (!trigger_matches_jet(trigEta, trigPhi, leadEta, leadPhi)) {continue;}
         
         double mc_leadPt = 0., mc_leadEta, mc_leadPhi;
         for (auto jet : dat.iter_mc_Fjet){
@@ -129,16 +156,16 @@ void jetEmbedding_loop(events& dat, string _options) {
             }
         }
         if ( mc_leadPt<4. ) {
-            hFake->Fill(leadPt, dat.mu_event->BBC_Ein, xsec_wt);         // FAKE JET
+            hFake->Fill(leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]);         // FAKE JET
             continue;
         }
         
         if ( matched_jets( leadPhi, mc_leadPhi, leadEta, mc_leadEta ) ) {
-            hMatchedJets->Fill( mc_leadPt, leadPt, dat.mu_event->BBC_Ein, xsec_wt );        // FILL RESPONSE
+            hMatchedJets->Fill( mc_leadPt, leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin] );        // FILL RESPONSE
         }
         else {            // FILL MISS AND MATCH
-            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt);
-            hFake->Fill(leadPt, dat.mu_event->BBC_Ein, xsec_wt);
+            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]);
+            hFake->Fill(leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]);
         }
 
     } // / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /

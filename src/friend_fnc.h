@@ -75,5 +75,12 @@ struct Iter_GoodTracks { // will iterate through all good powers
     bool operator!=(const Iter_GoodTracks& rhs);
 };
 
+double get_track_eff(double trPt, TH1D *hEffic);
+
+int get_zdcX_bin(double zdcx, const double* zdcx_bins);
+
+vector<fastjet::PseudoJet> gather_charged_UE(events& dat, double phi, const ioIntSet& bad_towers);
+
+int get_track_eta_bin( double eta );
 
 #endif

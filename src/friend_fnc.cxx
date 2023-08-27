@@ -157,6 +157,49 @@ mupicoTrack& Iter_GoodTracks::operator*() {return *ptr;};
 bool Iter_GoodTracks::operator!=(const Iter_GoodTracks& rhs) 
 { return index!=n_tracks;};
 
+double get_track_eff(double trPt, TH1D *hEffic) {
+    int ptBin = hEffic->FindBin(trPt);
+    return hEffic->GetBinContent(ptBin);
+};
 
+int get_zdcX_bin(double zdcx, const double* bin_ZDCx) {
+    if (zdcx>20000. || zdcx<5000.) { cout<<"zdcx must be between 5k and 20k"<<endl; }
+    for (int i=0; i<5; ++i) {
+        if ( zdcx>=bin_ZDCx[i] && zdcx<=bin_ZDCx[i+1] ) { return i; }
+    }
+    return 9999;
+};
+
+vector<fastjet::PseudoJet> gather_charged_UE(events& dat, double phi, const ioIntSet& bad_towers) {
+    vector<fastjet::PseudoJet> chargedUE;
+    for (auto& track : Iter_GoodTracks(dat.tca_track)) {
+//        if (!is_phi_trans(track.phi,phi) || fabs(track.eta)>0.9) continue;
+        if (!is_phi_trans(track.phi,phi)) continue;
+        if(track.pt<0.2) {continue;}//TEMPORARY!!!
+      else {
+            fastjet::PseudoJet current;
+            current.reset_momentum_PtYPhiM( track.pt, track.eta, track.phi, 0. );
+            chargedUE.push_back( current );
+        }
+    }
+    return chargedUE;
+};
+
+int get_track_eta_bin( double eta ){
+    double eta20lo[20] = { -1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 };
+    double eta20hi[20] = { -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1. };
+    if (fabs(eta)>0.9) {
+        cout<<"eta must be a value between -0.9 and 0.9 inclusive"<<endl;
+//    if (fabs(eta)>1.) {
+//        cout<<"eta must be a value between -1 and 1 inclusive"<<endl;
+        return 9999;
+    }
+    else {
+        for (int i=0; i<20; ++i) {
+            if (eta>=eta20lo[i] && eta<=eta20hi[i]) { return i; }
+        }
+    }
+    return 9999;
+};
 
 

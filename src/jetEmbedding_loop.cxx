@@ -12,7 +12,9 @@
 #include "TProfile.h"
 #include "friend_fnc.h"
 
-#include "ioClass.h"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/Selector.hh"
 
 const double bin_leadPt[51] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
 const double bin_iBBCEsum[11] = { 0.,  2802.38, 5460.32, 8420.66, 11722, 15410.1, 19584.9, 24371, 30105.3, 37666.3, 64000};
@@ -67,8 +69,10 @@ double pyth6_10x_Xsec(int i) { // here "i" indicates the pt-hat bin, which comes
 
 
 using namespace std;
+using namespace fastjet;
+
 void jetEmbedding_loop(events& dat, string _options) {
-    // Start of 
+    // Start of
     cout << " Running fn \"jetEmbedding_loop\"" << endl;
     istringstream options ( _options );
     int n_options = 0;
@@ -88,13 +92,17 @@ void jetEmbedding_loop(events& dat, string _options) {
     int triggerid { 500206 };
     const double vzCut = 10.0;   // |Vz|<=10 cm
     const double VertexZDiffCut = 6.0;
-
+    
+    JetDefinition jet_def(antikt_algorithm, 0.4);     //  JET DEFINITION
+    Selector jetEtaSelector = SelectorAbsEtaMax( 0.6 );
+    
     // Histogram declarations here:
     TH3D *hMatchedJets = new TH3D("hMatchedJets",";part-level leading jet p_{T} [GeV/c];det-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,50,bin_leadPt,10,bin_iBBCEsum);
     TH2D *hMissed = new TH2D("hMissed",";missed part-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,10,bin_iBBCEsum);
     TH2D *hFake = new TH2D("hFake",";fake det-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,10,bin_iBBCEsum);
     // maybe I will turn these into arrays or sparses for the jet pt-hat bins...
     
+    vector<PseudoJet> jet_inputs, rawJets;
 
     while (dat.next()) { // / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
         
@@ -105,32 +113,58 @@ void jetEmbedding_loop(events& dat, string _options) {
 
         if (dat.mu_event->ZDCx<5000. || dat.mu_event->ZDCx>20000.)  continue; // cut on ZDCx
 
-//        for (auto track : Iter_GoodTracks(dat.tca_track)) {        }
-//        for (auto track : dat.iter_mcTr){        }
-//        for (auto part : dat.iter_mcNeut){            }
         double trigEt = 0., trigEta, trigPhi;
-        for (auto tower : Iter_GoodCorrTowers(dat.tca_tower,badtow)) {
-            if (tower.Et > trigEt && tower.Et < 30. && tower.Et > 4.) {
+        for (auto tower : Iter_GoodTowerHits(dat.tca_tower,badtow)) {
+            if (tower.Et > trigEt && /*tower.Et < 30. &&*/ tower.Et > 4.) {
                 trigEt = tower.Et;
                 trigEta = tower.eta;
                 trigPhi = tower.phi;
             }
         }
         if ( trigEt<4. ){ continue; } // take the highest energy offline trigger tower >4GeV
-        if (dat.tca_Fjet->GetEntriesFast()==0 && dat.tca_mc_Fjet->GetEntriesFast()==0) { continue; }
+	if ( trigEt>30. ){ continue; } // throw away events with tower >30 GeV
+        
+        jet_inputs.clear(), rawJets.clear();
+        
+        bool tower_over_30 = false;
+	for (auto tower : Iter_GoodCorrTowers(dat.tca_tower,badtow)) {
+            if(tower.EtCorr()>0.2 && tower.EtCorr()<30.) {
+                fastjet::PseudoJet current;
+                current.reset_momentum_PtYPhiM( tower.EtCorr(), tower.eta, tower.phi, 0. );
+                jet_inputs.push_back( current );
+            }
+	    if(tower.EtCorr()>30){ 
+		tower_over_30 = true;
+		continue;
+	    }
+        }
+	if (tower_over_30) continue;
+        for (auto& track : Iter_GoodTracks(dat.tca_track)) {  // LOOP OVER TRACKS TO CLUSTER
+            if(track.pt>0.2 && track.pt<30.) {
+                fastjet::PseudoJet current;
+                current.reset_momentum_PtYPhiM( track.pt, track.eta, track.phi, 0. );
+                jet_inputs.push_back( current );
+            }
+        }
+        
+        ClusterSequence jetCluster( jet_inputs, jet_def );
+        rawJets = sorted_by_pt( jetEtaSelector( jetCluster.inclusive_jets() ) );
+        
+        if (rawJets.size()==0 && dat.tca_mc_Fjet->GetEntriesFast()==0) { continue; } // REQUIRE JET
         
         int zdcxbin = get_zdcX_bin(dat.mu_event->ZDCx);
 
+        double xsec_wt = pyth6_10x_Xsec( dat.pthat_bin );
+
         double leadPt = 0., leadEta, leadPhi;
-        for (auto jet : dat.iter_Fjet){
-            if (jet.pt > leadPt && jet.pt > 4.) { // take highest-pT jet
-                leadPt = jet.pt;
-                leadEta = jet.eta;
-                leadPhi = jet.phi;
+        if (rawJets.size()>0) {
+            if (rawJets[0].pt() > 4.) { // take highest-pT jet
+                leadPt = rawJets[0].pt();
+                leadEta = rawJets[0].eta();
+                leadPhi = rawJets[0].phi();
             }
         }
-        double xsec_wt = pyth6_10x_Xsec( dat.pthat_bin );
-        if ( leadPt<4. ) {
+        else if ( leadPt<4. || rawJets.size()==0 ) {
             double mc_leadPt = 0., mc_leadEta, mc_leadPhi;
             for (auto jet : dat.iter_mc_Fjet){
                 if (jet.pt > mc_leadPt && jet.pt > 4.) { // take highest-pT particle-level jet
@@ -142,6 +176,10 @@ void jetEmbedding_loop(events& dat, string _options) {
             if ( mc_leadPt<4. ) { continue; }
             hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]); // if part jet and no det jet: fill missed
             continue;
+        }
+        else {
+            cout<<"Veronica should revisit this after a snack"<<endl;
+            break;
         }
 //        cout<<trigPhi<<" \t "<<leadPhi<<endl;
 //        if( !is_phi_p4match( trigPhi, leadPhi) ) { continue; }  // require trigger in det-level leading jet (or recoil region)

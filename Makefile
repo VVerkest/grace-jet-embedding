@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 AN_setter=/tier2/home/groups/rhi/STAR/software/pico_Grace/AN_common/AN-common-config
 io_setter=/tier2/home/groups/rhi/STAR/software/pico_Grace/io_lib/iolib-config
 ccflg=`${FASTJET3}/fastjet-config --cxxflags` `root-config --cflags` `${io_setter} -I` `${AN_setter} -I`  -I${ROOUNFOLD}/src

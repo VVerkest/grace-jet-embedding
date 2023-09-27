@@ -16,7 +16,7 @@ int main(int nargs, char** argv) {
      *   5: optional input
      */
 
-    int n_events          {  (nargs>1) ? atoi(argv[1]) : 10000 };
+    int n_events          {  (nargs>1) ? atoi(argv[1]) : -1 };
     string inp_list       {  (nargs>2) ? argv[2] : "in-lists/list_test.list" };
     string which_loop     {  (nargs>3) ? argv[3] : "jetEmbedding_loop" };
     string o_name_tag     {  (nargs>4) ? argv[4] : "jetEmbedding_loop" };

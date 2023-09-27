@@ -100,6 +100,7 @@ void jetEmbedding_loop(events& dat, string _options) {
     TH3D *hMatchedJets = new TH3D("hMatchedJets",";part-level leading jet p_{T} [GeV/c];det-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,50,bin_leadPt,10,bin_iBBCEsum);
     TH2D *hMissed = new TH2D("hMissed",";missed part-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,10,bin_iBBCEsum);
     TH2D *hFake = new TH2D("hFake",";fake det-level leading jet p_{T} [GeV/c];EA_{BBC}",50,bin_leadPt,10,bin_iBBCEsum);
+    TH3D *hEventInfo = new TH3D("hEventInfo",";trigger tower E_{T} [GeV];det-level leading jet p_{T} [GeV/c];part-level leading jet p_{T} [GeV/c]",50,0.,50.,50,0.,50.,50,0.,50.);
     // maybe I will turn these into arrays or sparses for the jet pt-hat bins...
     
     vector<PseudoJet> jet_inputs, rawJets;
@@ -151,35 +152,6 @@ void jetEmbedding_loop(events& dat, string _options) {
         int zdcxbin = get_zdcX_bin(dat.mu_event->ZDCx);
 
         double xsec_wt = pyth6_10x_Xsec( dat.pthat_bin );
-
-        double leadPt = 0., leadEta, leadPhi;
-        if (rawJets.size()>0) {
-            if (rawJets[0].pt() > 4.) { // take highest-pT jet
-                leadPt = rawJets[0].pt();
-                leadEta = rawJets[0].eta();
-                leadPhi = rawJets[0].phi();
-            }
-        }
-        else if ( leadPt<4. || rawJets.size()==0 ) {
-            double mc_leadPt = 0., mc_leadEta, mc_leadPhi;
-            for (auto jet : dat.iter_mc_Fjet){
-                if (jet.pt > mc_leadPt && jet.pt > 4.) { // take highest-pT particle-level jet
-                    mc_leadPt = jet.pt;
-                    mc_leadEta = jet.eta;
-                    mc_leadPhi = jet.phi;
-                }
-            }
-            if ( mc_leadPt<4. ) { continue; }
-            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]); // if part jet and no det jet: fill missed
-            continue;
-        }
-        else {
-            cout<<"Veronica should revisit this after a snack"<<endl;
-            break;
-        }
-//        cout<<trigPhi<<" \t "<<leadPhi<<endl;
-//        if( !is_phi_p4match( trigPhi, leadPhi) ) { continue; }  // require trigger in det-level leading jet (or recoil region)
-        if (!trigger_matches_jet(trigEta, trigPhi, leadEta, leadPhi)) {continue;}
         
         double mc_leadPt = 0., mc_leadEta, mc_leadPhi;
         for (auto jet : dat.iter_mc_Fjet){
@@ -189,6 +161,28 @@ void jetEmbedding_loop(events& dat, string _options) {
                 mc_leadPhi = jet.phi;
             }
         }
+        
+        double leadPt = 0., leadEta, leadPhi;
+        if (rawJets.size()>0) {
+            if (rawJets[0].pt() > 4.) { // take highest-pT jet
+                leadPt = rawJets[0].pt();
+                leadEta = rawJets[0].eta();
+                leadPhi = rawJets[0].phi();
+            }
+        }
+        if ( leadPt<4. || rawJets.size()==0 ) {
+            if ( mc_leadPt<4. ) { continue; }
+            hMissed->Fill(mc_leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]); // if part jet and no det jet: fill missed
+            continue;
+        }
+        /*else {
+            cout<<"Veronica should revisit this after a snack"<<endl;
+            break;
+        }*/
+//        cout<<trigPhi<<" \t "<<leadPhi<<endl;
+//        if( !is_phi_p4match( trigPhi, leadPhi) ) { continue; }  // require trigger in det-level leading jet (or recoil region)
+        if (!trigger_matches_jet(trigEta, trigPhi, leadEta, leadPhi)) {continue;}
+        
         if ( mc_leadPt<4. ) {
             hFake->Fill(leadPt, dat.mu_event->BBC_Ein, xsec_wt*ZDCxWeight[zdcxbin]);         // FAKE JET
             continue;
@@ -209,6 +203,7 @@ void jetEmbedding_loop(events& dat, string _options) {
     hMatchedJets->Write();
     hMissed->Write();
     hFake->Write();
+    hEventInfo->Write();
 
     // Wrap-up work here:
     dat.log  << " Done running events" << endl;
